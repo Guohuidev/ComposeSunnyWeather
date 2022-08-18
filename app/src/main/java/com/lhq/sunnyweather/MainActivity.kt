@@ -8,20 +8,32 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.ViewModelProvider
+import com.lhq.sunnyweather.ui.place.PlaceViewModel
+import com.lhq.sunnyweather.ui.place.ShowPlace
 import com.lhq.sunnyweather.ui.theme.ComposeSunnyWeatherTheme
 
 class MainActivity : ComponentActivity() {
+    private val viewModel by lazy {
+        ViewModelProvider(this).get(PlaceViewModel::class.java)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComposeSunnyWeatherTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
-            }
+            ShowPlace(viewModel.placeList, viewModel::searchPlaces)
+//            ComposeSunnyWeatherTheme {
+//                // A surface container using the 'background' color from the theme
+//                Surface(color = MaterialTheme.colors.background) {
+//                    Greeting("Android")
+//                }
+//            }
         }
     }
+}
+
+fun test(str: String) {
+
 }
 
 @Composable
