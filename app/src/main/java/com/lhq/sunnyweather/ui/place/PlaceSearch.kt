@@ -33,7 +33,7 @@ import com.lhq.sunnyweather.ui.theme.Gray1
 fun ShowPlace(
     places: List<Place>,
     search: (query: String) -> Unit,
-    jump: (context: Context, lng: String, lat: String, placeName: String) -> Unit
+    jump: (place: Place) -> Unit
 ) {
     var textValue: String by remember {
         mutableStateOf("")
@@ -67,7 +67,7 @@ fun ShowPlace(
                         items(places) {
                             val context = LocalContext.current
                             Box(Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp).clip(RoundedCornerShape(10.dp))
-                                .background(Color.White).clickable { jump(context, it.location.lng, it.location.lat, it.name) }) {
+                                .background(Color.White).clickable { jump(it) }) {
                                 Column(Modifier.fillMaxWidth().wrapContentHeight().padding(18.dp).align(Alignment.Center)) {
                                     Text(text = it.name, modifier = Modifier.wrapContentSize(), fontSize = 20.sp)
                                     Text(text = it.address, modifier = Modifier.wrapContentSize().padding(top = 10.dp), fontSize = 14.sp)

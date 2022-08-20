@@ -29,16 +29,10 @@ class PlaceViewModel : ViewModel() {
         }
     }
 
-    /**
-     * 跳转到天气页面
-     */
-    fun jump(context: Context, lng: String, lat: String, placeName: String) {
-        val intent = Intent(context, WeatherActivity::class.java).apply {
-            putExtra("location_lng", lng)
-            putExtra("location_lat", lat)
-            putExtra("place_name", placeName)
-        }
-        (context as Activity).startActivity(intent)
-        (context as Activity).finish()
-    }
+    fun savePlace(place: Place) = Repository.savePlace(place)
+
+    fun getSavedPlace() = Repository.getSavedPlace()
+
+    fun isPlaceSaved() = Repository.isPlaceSaved()
+
 }

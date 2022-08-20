@@ -1,17 +1,11 @@
 package com.lhq.sunnyweather.logic
 
-import androidx.lifecycle.LiveData
+import com.lhq.sunnyweather.logic.dao.PlaceDao
 import com.lhq.sunnyweather.logic.model.Place
-import com.lhq.sunnyweather.logic.model.PlaceResponse
-import com.lhq.sunnyweather.logic.model.RealtimeResponse
 import com.lhq.sunnyweather.logic.model.Weather
 import com.lhq.sunnyweather.logic.network.ServiceCreator
-import kotlinx.coroutines.Dispatchers
-import kotlin.coroutines.CoroutineContext
-
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import java.lang.RuntimeException
 
 
 object Repository {
@@ -73,5 +67,11 @@ object Repository {
 //            emit(result)
 //        }
 //    }
+
+    fun savePlace(place: Place) = PlaceDao.savePlace(place)
+
+    fun getSavedPlace() = PlaceDao.getSavedPlace()
+
+    fun isPlaceSaved() = PlaceDao.isPlaceSaved()
 
 }
