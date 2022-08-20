@@ -9,25 +9,21 @@ import kotlin.coroutines.CoroutineContext
 
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
+import java.lang.RuntimeException
 
 
 object Repository {
 
-    suspend fun searchPlaces(query: String): List<Place>? {
-//        return fire(Dispatchers.Main) {
-//            val placeResponse: PlaceResponse = ServiceCreator.placeService.searchPlaces(query)
-//            if (placeResponse.status == "ok") {
-//                val places = placeResponse.places
-//                Result.success(places)
-//            } else {
-//                Result.failure(RuntimeException("response status is${placeResponse.status}"))
-//            }
-//        }
-        val placeResponse: PlaceResponse = ServiceCreator.placeService.searchPlaces(query)
-        return if (placeResponse.status == "ok") {
-            placeResponse.places
-        } else {
-            null
+    suspend fun searchPlaces(query: String): Result<List<Place>> {
+        return try {
+            val placeResponse: PlaceResponse = ServiceCreator.placeService.searchPlaces(query)
+            if (placeResponse.status == "ok") {
+                Result.success(placeResponse.places)
+            } else {
+                Result.failure(RuntimeException("未能查询到地点！"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 

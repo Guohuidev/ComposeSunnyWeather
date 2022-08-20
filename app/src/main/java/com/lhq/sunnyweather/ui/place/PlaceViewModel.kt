@@ -14,13 +14,13 @@ class PlaceViewModel : ViewModel() {
 
     fun searchPlaces(query: String) {
         viewModelScope.launch {
-            val places = Repository.searchPlaces(query)
+            val placeResult: Result<List<Place>> = Repository.searchPlaces(query)
+            val places: List<Place>? = placeResult.getOrNull()
             if (places != null) {
                 placeList.clear()
                 placeList.addAll(places)
-                println("place = ${placeList.toString()}")
             } else {
-                Toast.makeText(SunnyWeatherApplication.context, "error!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(SunnyWeatherApplication.context, placeResult.exceptionOrNull()?.message, Toast.LENGTH_SHORT).show()
             }
         }
     }
