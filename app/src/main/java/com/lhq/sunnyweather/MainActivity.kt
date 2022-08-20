@@ -1,6 +1,8 @@
 package com.lhq.sunnyweather
 
+import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.MaterialTheme
@@ -12,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.lhq.sunnyweather.ui.place.PlaceViewModel
 import com.lhq.sunnyweather.ui.place.ShowPlace
 import com.lhq.sunnyweather.ui.theme.ComposeSunnyWeatherTheme
+import com.lhq.sunnyweather.ui.weather.WeatherUi
 
 class MainActivity : ComponentActivity() {
     private val viewModel by lazy {
@@ -21,20 +24,12 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ShowPlace(viewModel.placeList, viewModel::searchPlaces)
-//            ComposeSunnyWeatherTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(color = MaterialTheme.colors.background) {
-//                    Greeting("Android")
-//                }
-//            }
+            ShowPlace(viewModel.placeList, viewModel::searchPlaces, viewModel::jump)
         }
     }
 }
 
-fun test(str: String) {
 
-}
 
 @Composable
 fun Greeting(name: String) {

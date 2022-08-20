@@ -1,7 +1,9 @@
 package com.lhq.sunnyweather.ui.place
 
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -16,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.BaselineShift
@@ -27,107 +30,51 @@ import com.lhq.sunnyweather.logic.model.Place
 import com.lhq.sunnyweather.ui.theme.Gray1
 
 @Composable
-fun ShowPlace(places: List<Place>, search: (query: String) -> Unit) {
+fun ShowPlace(
+    places: List<Place>,
+    search: (query: String) -> Unit,
+    jump: (context: Context, lng: String, lat: String, placeName: String) -> Unit
+) {
     var textValue: String by remember {
         mutableStateOf("")
     }
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Gray1)
-    ) {
+
+    Box(Modifier.fillMaxSize().background(Gray1)) {
         if (places.isEmpty()) {
-            Image(
-                painter = painterResource(id = R.drawable.bg_place),
-                contentDescription = null,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .wrapContentHeight()
-                    .align(Alignment.BottomCenter)
-            )
+            Image(painter = painterResource(id = R.drawable.bg_place), contentDescription = null,
+                modifier = Modifier.fillMaxWidth().wrapContentHeight().align(Alignment.BottomCenter))
         }
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(
-                Modifier
-                    .fillMaxWidth()
-                    .height(60.dp)
-                    .background(MaterialTheme.colors.primary)
-            ) {
-                Box(
-                    modifier = Modifier
-//                        .padding(10.dp)
-                        .padding(10.dp)
-                        .fillMaxSize()
-                        .clip(RoundedCornerShape(30.dp))
-                        .background(Color.White),
-                    contentAlignment = Alignment.CenterStart
-                ) {
+        Column(Modifier.fillMaxSize()) {
+            Box(Modifier.fillMaxWidth().height(60.dp).background(MaterialTheme.colors.primary)) {
+                Box(Modifier.padding(10.dp).fillMaxSize().clip(RoundedCornerShape(30.dp)).background(Color.White),
+                    contentAlignment = Alignment.CenterStart) {
                     BasicTextField(
                         value = textValue,
-                        modifier = Modifier
-                            .padding(start = 20.dp)
-                            .fillMaxWidth(),
+                        modifier = Modifier.padding(start = 20.dp).fillMaxWidth(),
+                        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Start),
                         onValueChange = {
                             textValue = it
                             search(it)
-                        },
-                        textStyle = TextStyle(fontSize = 18.sp, textAlign = TextAlign.Start),
+                        }
                     )
                 }
-
-
-//                TextField(
-//                    value = textValue,
-//                    onValueChange = {
-//                        textValue = it
-//                        search(it)
-//                    },
-//                    shape = RoundedCornerShape(20.dp),
-//                    modifier = Modifier
-//                        .fillMaxSize()
-////                        .clip(RoundedCornerShape(40.dp))
-//                        .background(color = Color.White)
-//                )
             }
 
             if (places.isNotEmpty()) {
                 LazyColumn(
+                    modifier = Modifier.fillMaxSize().padding(vertical = 10.dp),
                     content = {
                         items(places) {
-                            Box(
-                                Modifier
-                                    .fillMaxWidth()
-                                    .wrapContentHeight()
-                                    .padding(10.dp)
-                                    .clip(RoundedCornerShape(10.dp))
-                                    .background(Color.White)
-                            ) {
-                                Column(
-                                    Modifier
-                                        .fillMaxWidth()
-                                        .wrapContentHeight()
-                                        .padding(18.dp)
-                                        .align(Alignment.Center)
-                                ) {
-                                    Text(
-                                        text = it.name,
-                                        modifier = Modifier.wrapContentSize(),
-                                        fontSize = 20.sp
-                                    )
-                                    Text(
-                                        text = it.address,
-                                        modifier = Modifier
-                                            .wrapContentSize()
-                                            .padding(top = 10.dp),
-                                        fontSize = 14.sp
-                                    )
+                            val context = LocalContext.current
+                            Box(Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp).clip(RoundedCornerShape(10.dp))
+                                .background(Color.White).clickable { jump(context, it.location.lng, it.location.lat, it.name) }) {
+                                Column(Modifier.fillMaxWidth().wrapContentHeight().padding(18.dp).align(Alignment.Center)) {
+                                    Text(text = it.name, modifier = Modifier.wrapContentSize(), fontSize = 20.sp)
+                                    Text(text = it.address, modifier = Modifier.wrapContentSize().padding(top = 10.dp), fontSize = 14.sp)
                                 }
                             }
                         }
-                    },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(vertical = 10.dp)
+                    }
                 )
             }
         }
