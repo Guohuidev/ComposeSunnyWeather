@@ -16,6 +16,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.lhq.sunnyweather.R
 import com.lhq.sunnyweather.logic.model.DailyResponse
 import com.lhq.sunnyweather.logic.model.RealtimeResponse
@@ -29,19 +31,27 @@ import java.util.*
  * 天气页面，包含当前天气、预告天气、生活指数三个部分
  */
 @Composable
-fun WeatherUi(weather: Weather, placeName: String) {
-    if (weather.daily != null && weather.realtime != null && placeName.isNotEmpty()) {
-        LazyColumn(Modifier.fillMaxWidth().background(Gray1), content = {
-            item {
-                WeatherRealtime(weather.realtime, placeName)
-            }
-            item {
-                WeatherForecast(weather.daily)
-            }
-            item {
-                LifeIndex(weather.daily.lifeIndex)
-            }
-        })
+
+fun WeatherUi(viewModel: WeatherViewModel) {
+    val realtime = viewModel.mutableWeather.realtime
+    val daily = viewModel.mutableWeather.daily
+    val placeName = viewModel.placeName
+    val isRefreshing = viewModel.isRefreshing
+
+    if (daily != null && realtime != null && placeName.isNotEmpty()) {
+        SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing), onRefresh = { viewModel.refreshWeather() }) {
+            LazyColumn(Modifier.fillMaxWidth().background(Gray1), content = {
+                item {
+                    WeatherRealtime(realtime, placeName)
+                }
+                item {
+                    WeatherForecast(daily)
+                }
+                item {
+                    LifeIndex(daily.lifeIndex)
+                }
+            })
+        }
     }
 }
 

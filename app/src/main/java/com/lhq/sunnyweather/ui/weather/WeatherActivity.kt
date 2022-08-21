@@ -10,7 +10,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.view.WindowCompat
 import androidx.lifecycle.ViewModelProvider
 import com.lhq.sunnyweather.ui.weather.ui.theme.ComposeSunnyWeatherTheme
 
@@ -24,7 +23,7 @@ class WeatherActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         transparentStatusBar()
         setContent {
-            WeatherUi(weather = viewModel.mutableWeather, viewModel.placeName)
+            WeatherUi(viewModel)
         }
         
         if (viewModel.locationLng.isEmpty()) {
@@ -36,7 +35,7 @@ class WeatherActivity : ComponentActivity() {
         if (viewModel.placeName.isEmpty()) {
             viewModel.placeName = intent.getStringExtra("place_name") ?: ""
         }
-        viewModel.refreshWeather(viewModel.locationLng, viewModel.locationLat)
+        viewModel.refreshWeather()
     }
 }
 

@@ -1,15 +1,9 @@
 package com.lhq.sunnyweather
 
-import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
-import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
@@ -19,7 +13,6 @@ import com.lhq.sunnyweather.ui.place.PlaceViewModel
 import com.lhq.sunnyweather.ui.place.ShowPlace
 import com.lhq.sunnyweather.ui.theme.ComposeSunnyWeatherTheme
 import com.lhq.sunnyweather.ui.weather.WeatherActivity
-import com.lhq.sunnyweather.ui.weather.WeatherUi
 
 class MainActivity : ComponentActivity() {
     private val viewModel by lazy {

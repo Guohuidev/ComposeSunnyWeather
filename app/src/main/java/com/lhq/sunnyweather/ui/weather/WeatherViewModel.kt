@@ -1,5 +1,6 @@
 package com.lhq.sunnyweather.ui.weather
 
+
 import android.widget.Toast
 import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
@@ -14,17 +15,21 @@ class WeatherViewModel: ViewModel() {
     var locationLat = ""
     var placeName = ""
 
+    var isRefreshing = false
     var mutableWeather by mutableStateOf(Weather())
 
     /**
      * 刷新天气
      */
-    fun refreshWeather(lng: String, lat: String) {
+    fun refreshWeather() {
+        isRefreshing = true
         viewModelScope.launch {
-            val weatherResult = Repository.refreshWeather(lng, lat)
+            val weatherResult = Repository.refreshWeather(locationLng, locationLat)
             val weather = weatherResult.getOrNull()
             if (weather != null) {
                 mutableWeather = weather
+                isRefreshing = false
+                Toast.makeText(SunnyWeatherApplication.context, "天气更新成功！", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(SunnyWeatherApplication.context, weatherResult.exceptionOrNull()?.message, Toast.LENGTH_SHORT).show()
             }
