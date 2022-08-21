@@ -1,6 +1,7 @@
 package com.lhq.sunnyweather.logic.model
 
 import com.google.gson.annotations.SerializedName
+import java.io.Serializable
 
 data class PlaceResponse(
     val status: String,
@@ -11,9 +12,9 @@ data class Place(
     val name: String,
     val location: Location,
     @SerializedName("formatted_address") val address: String
-)
+) : Serializable
 
 data class Location(
     val lng: String,
     val lat: String
-)
+) : Serializable

@@ -22,15 +22,14 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ShowPlace(viewModel.placeList, viewModel::searchPlaces, this::jump)
+            ShowPlace(viewModel, this::jump)
         }
 
+        // 如果本地已经有位置信息，则直接跳转天气页面
         if (viewModel.isPlaceSaved()) {
             val place = viewModel.getSavedPlace()
             val intent = Intent(this, WeatherActivity::class.java).apply {
-                putExtra("location_lng", place.location.lng)
-                putExtra("location_lat", place.location.lat)
-                putExtra("place_name", place.name)
+                putExtra("place", place)
             }
             startActivity(intent)
             finish()
@@ -42,9 +41,7 @@ class MainActivity : ComponentActivity() {
      */
     private fun jump(place: Place) {
         val intent = Intent(this, WeatherActivity::class.java).apply {
-            putExtra("location_lng", place.location.lng)
-            putExtra("location_lat", place.location.lat)
-            putExtra("place_name", place.name)
+            putExtra("place", place)
         }
         viewModel.savePlace(place)
         startActivity(intent)

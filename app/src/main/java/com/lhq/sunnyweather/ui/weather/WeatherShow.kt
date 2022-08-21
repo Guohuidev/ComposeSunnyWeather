@@ -1,17 +1,27 @@
 package com.lhq.sunnyweather.ui.weather
 
+import android.content.Context
+import android.view.inputmethod.InputMethodManager
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Scaffold
+import androidx.compose.material.ScaffoldState
 import androidx.compose.material.Text
+import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -21,28 +31,60 @@ import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.lhq.sunnyweather.R
 import com.lhq.sunnyweather.logic.model.DailyResponse
 import com.lhq.sunnyweather.logic.model.RealtimeResponse
-import com.lhq.sunnyweather.logic.model.Weather
 import com.lhq.sunnyweather.logic.model.getSky
+import com.lhq.sunnyweather.ui.place.PlaceViewModel
+import com.lhq.sunnyweather.ui.place.ShowPlace
 import com.lhq.sunnyweather.ui.theme.Gray1
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+
+
+
+@ExperimentalComposeUiApi
+@Composable
+fun WeatherUi(weatherViewModel: WeatherViewModel, placeViewModel: PlaceViewModel) {
+    val scaffoldState = rememberScaffoldState()
+    val scope = rememberCoroutineScope()
+    val keyboardController = LocalSoftwareKeyboardController.current
+
+    Scaffold(
+        drawerContent = {
+            ShowPlace(placeViewModel) {
+                weatherViewModel.place = it
+                weatherViewModel.refreshWeather()
+                keyboardController?.hide()
+                scope.launch {
+                    scaffoldState.drawerState.close()
+                }
+            }
+        },
+        content = {
+            WeatherMain(weatherViewModel, scaffoldState, scope)
+        },
+        drawerGesturesEnabled = scaffoldState.drawerState.isOpen,
+        scaffoldState = scaffoldState,
+    )
+}
+
 
 /**
  * 天气页面，包含当前天气、预告天气、生活指数三个部分
  */
 @Composable
-
-fun WeatherUi(viewModel: WeatherViewModel) {
-    val realtime = viewModel.mutableWeather.realtime
-    val daily = viewModel.mutableWeather.daily
-    val placeName = viewModel.placeName
-    val isRefreshing = viewModel.isRefreshing
+fun WeatherMain(weatherViewModel: WeatherViewModel, scaffoldState: ScaffoldState, scope: CoroutineScope) {
+    val realtime = weatherViewModel.mutableWeather.realtime
+    val daily = weatherViewModel.mutableWeather.daily
+    val placeName = weatherViewModel.place.name
+    val isRefreshing = weatherViewModel.isRefreshing
 
     if (daily != null && realtime != null && placeName.isNotEmpty()) {
-        SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing), onRefresh = { viewModel.refreshWeather() }) {
+        SwipeRefresh(state = rememberSwipeRefreshState(isRefreshing),
+            onRefresh = { weatherViewModel.refreshWeather() }) {
             LazyColumn(Modifier.fillMaxWidth().background(Gray1), content = {
                 item {
-                    WeatherRealtime(realtime, placeName)
+                    WeatherRealtime(realtime, placeName, scaffoldState, scope)
                 }
                 item {
                     WeatherForecast(daily)
@@ -59,15 +101,28 @@ fun WeatherUi(viewModel: WeatherViewModel) {
  * 当前天气
  */
 @Composable
-fun WeatherRealtime(weatherRealtime: RealtimeResponse.Realtime, placeName: String) {
+fun WeatherRealtime(
+    weatherRealtime: RealtimeResponse.Realtime,
+    placeName: String,
+    scaffoldState: ScaffoldState,
+    scope: CoroutineScope
+) {
     val sky = getSky(weatherRealtime.skycon)
 
     Box(Modifier.height(550.dp).fillMaxWidth()) {
         // 背景图
         Image(painter = painterResource(sky.bg), contentDescription = null, modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.FillBounds)
-        Box(Modifier.padding(top = 35.dp).fillMaxWidth(), contentAlignment = Alignment.Center) {
-            Text(text = placeName, color = Color.White, fontSize = 22.sp)
+        Box(Modifier.padding(top = 35.dp).fillMaxWidth()) {
+            // 切换城市icon
+            Image(painter = painterResource(R.drawable.ic_home), contentDescription = null,
+                modifier = Modifier.padding(start = 15.dp).size(30.dp).clickable {
+                    scope.launch {
+                        scaffoldState.drawerState.open()
+                    }
+                })
+            // 位置文本
+            Text(text = placeName, color = Color.White, fontSize = 22.sp, modifier = Modifier.align(Alignment.Center))
         }
         Column(Modifier.fillMaxWidth().align(Alignment.Center),
             horizontalAlignment = Alignment.CenterHorizontally) {

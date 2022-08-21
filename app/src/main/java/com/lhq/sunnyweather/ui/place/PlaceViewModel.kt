@@ -1,15 +1,12 @@
 package com.lhq.sunnyweather.ui.place
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateListOf
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.lhq.sunnyweather.SunnyWeatherApplication
 import com.lhq.sunnyweather.logic.Repository
 import com.lhq.sunnyweather.logic.model.Place
-import com.lhq.sunnyweather.ui.weather.WeatherActivity
 import kotlinx.coroutines.launch
 
 

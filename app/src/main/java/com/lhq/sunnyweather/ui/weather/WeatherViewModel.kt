@@ -7,13 +7,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.lhq.sunnyweather.SunnyWeatherApplication
 import com.lhq.sunnyweather.logic.Repository
+import com.lhq.sunnyweather.logic.model.Place
 import com.lhq.sunnyweather.logic.model.Weather
 import kotlinx.coroutines.launch
 
 class WeatherViewModel: ViewModel() {
-    var locationLng = ""
-    var locationLat = ""
-    var placeName = ""
+    lateinit var place: Place
 
     var isRefreshing = false
     var mutableWeather by mutableStateOf(Weather())
@@ -24,7 +23,7 @@ class WeatherViewModel: ViewModel() {
     fun refreshWeather() {
         isRefreshing = true
         viewModelScope.launch {
-            val weatherResult = Repository.refreshWeather(locationLng, locationLat)
+            val weatherResult = Repository.refreshWeather(place.location.lng, place.location.lat)
             val weather = weatherResult.getOrNull()
             if (weather != null) {
                 mutableWeather = weather

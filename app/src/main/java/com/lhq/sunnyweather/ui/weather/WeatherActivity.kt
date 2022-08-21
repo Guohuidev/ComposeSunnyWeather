@@ -11,44 +11,31 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import com.lhq.sunnyweather.logic.model.Place
+import com.lhq.sunnyweather.ui.place.PlaceViewModel
 import com.lhq.sunnyweather.ui.weather.ui.theme.ComposeSunnyWeatherTheme
 
 class WeatherActivity : ComponentActivity() {
 
-    private val viewModel by lazy {
+    private val weatherViewModel by lazy {
         ViewModelProvider(this).get(WeatherViewModel::class.java)
+    }
+
+    private val placeViewModel by lazy {
+        ViewModelProvider(this).get(PlaceViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         transparentStatusBar()
         setContent {
-            WeatherUi(viewModel)
+            WeatherUi(weatherViewModel, placeViewModel)
         }
-        
-        if (viewModel.locationLng.isEmpty()) {
-            viewModel.locationLng = intent.getStringExtra("location_lng") ?: ""
-        }
-        if (viewModel.locationLat.isEmpty()) {
-            viewModel.locationLat = intent.getStringExtra("location_lat") ?: ""
-        }
-        if (viewModel.placeName.isEmpty()) {
-            viewModel.placeName = intent.getStringExtra("place_name") ?: ""
-        }
-        viewModel.refreshWeather()
-    }
-}
 
-@Composable
-fun Greeting2(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview2() {
-    ComposeSunnyWeatherTheme {
-        Greeting2("Android")
+        // 从上一个activity拿到place对象
+        val place = intent.getSerializableExtra("place") as Place
+        weatherViewModel.place = place
+        weatherViewModel.refreshWeather()
     }
 }
 
