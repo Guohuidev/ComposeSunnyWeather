@@ -52,6 +52,7 @@ fun WeatherUi(weatherViewModel: WeatherViewModel, placeViewModel: PlaceViewModel
     Scaffold(
         drawerContent = {
             ShowPlace(placeViewModel) {
+                placeViewModel.savePlace(it)
                 weatherViewModel.place = it
                 weatherViewModel.refreshWeather()
                 keyboardController?.hide()

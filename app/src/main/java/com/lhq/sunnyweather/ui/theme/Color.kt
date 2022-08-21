@@ -9,3 +9,4 @@ val Teal200 = Color(0xFF03DAC5)
 
 val Gray1 = Color(0xFFE7EBEA)
 val White1 = Color(0xFFFCFCFC)
+val Blue1 = Color(0xFF2B93EF)

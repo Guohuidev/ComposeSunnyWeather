@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.lhq.sunnyweather.R
 import com.lhq.sunnyweather.logic.model.Place
+import com.lhq.sunnyweather.ui.theme.Blue1
 import com.lhq.sunnyweather.ui.theme.Gray1
 
 @Composable
@@ -39,7 +40,8 @@ fun ShowPlace(viewModel: PlaceViewModel, clickAction: (place: Place) -> Unit) {
                 modifier = Modifier.fillMaxWidth().wrapContentHeight().align(Alignment.BottomCenter))
         }
         Column(Modifier.fillMaxSize()) {
-            Box(Modifier.fillMaxWidth().height(60.dp).background(MaterialTheme.colors.primary)) {
+            Box(Modifier.fillMaxWidth().height(25.dp).background(Blue1))
+            Box(Modifier.fillMaxWidth().height(60.dp).background(Blue1)) {
                 Box(Modifier.padding(10.dp).fillMaxSize().clip(RoundedCornerShape(30.dp)).background(Color.White),
                     contentAlignment = Alignment.CenterStart) {
                     BasicTextField(
@@ -62,7 +64,6 @@ fun ShowPlace(viewModel: PlaceViewModel, clickAction: (place: Place) -> Unit) {
                             Box(Modifier.fillMaxWidth().wrapContentHeight().padding(10.dp).clip(RoundedCornerShape(10.dp))
                                 .background(Color.White).clickable {
                                     clickAction(it)
-
                                 }
                             ) {
                                 Column(Modifier.fillMaxWidth().wrapContentHeight().padding(18.dp).align(Alignment.Center)) {

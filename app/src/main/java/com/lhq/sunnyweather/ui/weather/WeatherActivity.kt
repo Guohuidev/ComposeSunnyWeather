@@ -1,6 +1,7 @@
 package com.lhq.sunnyweather.ui.weather
 
 import android.app.Activity
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -11,6 +12,8 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat.Type.statusBars
 import androidx.lifecycle.ViewModelProvider
 import com.lhq.sunnyweather.logic.model.Place
 import com.lhq.sunnyweather.ui.place.PlaceViewModel
@@ -30,6 +33,11 @@ class WeatherActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         transparentStatusBar()
+//        val decorView = window.decorView
+//        val option = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+//        decorView.systemUiVisibility = option
+//        window.statusBarColor = Color.TRANSPARENT
+
         setContent {
             WeatherUi(weatherViewModel, placeViewModel)
         }
@@ -57,4 +65,3 @@ private fun transparentStatusBar(window: Window) {
     window.decorView.systemUiVisibility = option or vis
     window.statusBarColor = android.graphics.Color.TRANSPARENT
 }
-

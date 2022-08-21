@@ -13,14 +13,16 @@ import com.lhq.sunnyweather.ui.place.PlaceViewModel
 import com.lhq.sunnyweather.ui.place.ShowPlace
 import com.lhq.sunnyweather.ui.theme.ComposeSunnyWeatherTheme
 import com.lhq.sunnyweather.ui.weather.WeatherActivity
+import com.lhq.sunnyweather.ui.weather.transparentStatusBar
 
-class MainActivity : ComponentActivity() {
+class PlaceActivity : ComponentActivity() {
     private val viewModel by lazy {
         ViewModelProvider(this).get(PlaceViewModel::class.java)
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        transparentStatusBar()
         setContent {
             ShowPlace(viewModel, this::jump)
         }
@@ -46,20 +48,5 @@ class MainActivity : ComponentActivity() {
         viewModel.savePlace(place)
         startActivity(intent)
         finish()
-    }
-}
-
-
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    ComposeSunnyWeatherTheme {
-        Greeting("Android")
     }
 }
